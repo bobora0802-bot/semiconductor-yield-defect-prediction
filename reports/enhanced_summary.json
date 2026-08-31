@@ -1,0 +1,135 @@
+{
+  "selected_model": "random_forest",
+  "random_stratified": {
+    "threshold": 0.15000000000000002,
+    "test_failures": 21,
+    "metrics": {
+      "threshold": 0.15000000000000002,
+      "roc_auc": 0.7385015439622948,
+      "pr_auc": 0.24427318474649615,
+      "brier_score": 0.058957141777474,
+      "balanced_accuracy": 0.664635137331383,
+      "precision": 0.16176470588235295,
+      "recall": 0.5238095238095238,
+      "true_negative": 236,
+      "false_positive": 57,
+      "false_negative": 10,
+      "true_positive": 11,
+      "review_rate": 0.21656050955414013
+    }
+  },
+  "chronological": {
+    "train_period": [
+      "2008-07-19T11:55:00",
+      "2008-10-02T19:25:00"
+    ],
+    "test_period": [
+      "2008-10-02T20:54:00",
+      "2008-10-17T06:07:00"
+    ],
+    "threshold": 0.24000000000000002,
+    "test_failures": 17,
+    "metrics": {
+      "threshold": 0.24000000000000002,
+      "roc_auc": 0.6159635571400277,
+      "pr_auc": 0.08737444626521616,
+      "brier_score": 0.053206677392469724,
+      "balanced_accuracy": 0.49158249158249157,
+      "precision": 0.0,
+      "recall": 0.0,
+      "true_negative": 292,
+      "false_positive": 5,
+      "false_negative": 17,
+      "true_positive": 0,
+      "review_rate": 0.01592356687898089
+    }
+  },
+  "calibration_observation": {
+    "best_brier_and_quantile_ece": "isotonic",
+    "best_log_loss": "sigmoid",
+    "promoted_for_policy_use": null,
+    "reason": "Calibration methods disagree across proper scores on a small holdout; report the comparison without promoting one probability scale."
+  },
+  "feature_stability_top": [
+    {
+      "feature": "sensor_103",
+      "selection_frequency": 1.0,
+      "top20_frequency": 1.0,
+      "mean_importance_when_top20": 0.03681803243864423,
+      "median_rank_when_top20": 1.0,
+      "folds": 10
+    },
+    {
+      "feature": "sensor_059",
+      "selection_frequency": 1.0,
+      "top20_frequency": 1.0,
+      "mean_importance_when_top20": 0.03228513639563173,
+      "median_rank_when_top20": 2.0,
+      "folds": 10
+    },
+    {
+      "feature": "sensor_510",
+      "selection_frequency": 1.0,
+      "top20_frequency": 0.8,
+      "mean_importance_when_top20": 0.02105445863671914,
+      "median_rank_when_top20": 5.0,
+      "folds": 10
+    },
+    {
+      "feature": "sensor_064",
+      "selection_frequency": 1.0,
+      "top20_frequency": 0.8,
+      "mean_importance_when_top20": 0.018680551674901978,
+      "median_rank_when_top20": 13.0,
+      "folds": 10
+    },
+    {
+      "feature": "sensor_477",
+      "selection_frequency": 0.8,
+      "top20_frequency": 0.7,
+      "mean_importance_when_top20": 0.022508650026100117,
+      "median_rank_when_top20": 5.0,
+      "folds": 10
+    },
+    {
+      "feature": "sensor_213",
+      "selection_frequency": 0.8,
+      "top20_frequency": 0.7,
+      "mean_importance_when_top20": 0.020409299543150412,
+      "median_rank_when_top20": 7.0,
+      "folds": 10
+    },
+    {
+      "feature": "sensor_130",
+      "selection_frequency": 0.9,
+      "top20_frequency": 0.7,
+      "mean_importance_when_top20": 0.020380577570781412,
+      "median_rank_when_top20": 6.0,
+      "folds": 10
+    },
+    {
+      "feature": "sensor_281",
+      "selection_frequency": 0.8,
+      "top20_frequency": 0.7,
+      "mean_importance_when_top20": 0.01902000018615847,
+      "median_rank_when_top20": 8.0,
+      "folds": 10
+    },
+    {
+      "feature": "sensor_125",
+      "selection_frequency": 1.0,
+      "top20_frequency": 0.6,
+      "mean_importance_when_top20": 0.02029461861626513,
+      "median_rank_when_top20": 13.0,
+      "folds": 10
+    },
+    {
+      "feature": "sensor_021",
+      "selection_frequency": 0.9,
+      "top20_frequency": 0.6,
+      "mean_importance_when_top20": 0.019708740783696787,
+      "median_rank_when_top20": 7.5,
+      "folds": 10
+    }
+  ]
+}
