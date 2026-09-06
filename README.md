@@ -1,4 +1,4 @@
-# Semiconductor Manufacturing Yield and Defect Prediction
+# Semiconductor Yield Excursion Monitoring & Root-Cause Triage
 
 An evidence-led machine-learning project using the UCI SECOM manufacturing
 dataset to identify high-risk semiconductor process runs. The project is built
@@ -20,6 +20,11 @@ performance looked useful, but chronological performance declined materially.
 The repository therefore treats temporal robustness, uncertainty, operating
 capacity, and model limitations as first-class results instead of presenting a
 single favourable score.
+
+The original supervised baseline and enhanced temporal analysis remain intact.
+The new monitoring layer adds leakage-safe Phase I/Phase II SPC, multivariate
+PCA monitoring, capacity-based strategy comparison, and association-only
+candidate-variable triage.
 
 ## Why this problem matters
 
@@ -80,6 +85,9 @@ $env:PYTHONPATH = "$PWD\src"
 .\.venv\Scripts\python.exe -m pytest
 .\.venv\Scripts\python.exe scripts\run_baseline.py
 .\.venv\Scripts\python.exe scripts\run_enhanced_analysis.py
+.\.venv\Scripts\python.exe scripts\run_spc_analysis.py
+.\.venv\Scripts\python.exe scripts\run_root_cause_triage.py
+.\.venv\Scripts\streamlit.exe run app\streamlit_app.py
 ```
 
 Generated evidence is stored under `reports/tables/`, `reports/figures/`, and
@@ -160,6 +168,65 @@ Across 10 repeated-CV folds, `sensor_103` and `sensor_059` appeared in the
 random forest's top 20 every time. This is evidence of ranking stability for
 the fitted workflow, not proof that either variable is a physical cause.
 
+## Excursion-monitoring workflow
+
+The added research question is whether reference-fitted SPC signals identify
+later process excursions, and whether they complement the existing supervised
+failure-risk ranking without using the final chronological holdout for fitting
+or tuning.
+
+The chronological split is unchanged: the earliest 1,253 runs are development
+data and the latest 314 runs are the final holdout. Within development data,
+the earliest 751-run window is Phase I. Its 684 historically labelled pass runs
+form a **label-assisted historical reference**. This is a practical proxy for
+normal operation, not a validated in-control production period. The remaining
+502 development runs are Phase II.
+
+All imputation, scaling, 15-variable monitoring selection, PCA dimensions,
+control limits, and combined-score weights are fitted without final-holdout
+labels. PCA retained 9 components to cover at least 90% of reference variance;
+empirical 99th percentiles of Phase I reference scores set the T² limit
+(79.473) and Q/SPE limit (11.279).
+
+## SPC and engineering-strategy results
+
+The final-period result is deliberately negative rather than cosmetically
+optimised. I-MR, EWMA, and CUSUM each alerted on 100% of holdout runs, while
+Hotelling's T² alerted on 83.1%; these signals captured many failures but had
+unacceptable false-positive rates and are evidence of broad distribution
+shift. Q/SPE produced one alert and captured no failures.
+
+| Strategy | Capacity | Failures captured | Failure capture | Lift over random |
+| --- | ---: | ---: | ---: | ---: |
+| Existing ML risk | 10% | 3 / 17 | 17.6% | 1.73x |
+| Existing ML risk | 20% | 6 / 17 | 35.3% | 1.76x |
+| SPC severity | 10% | 0 / 17 | 0.0% | 0.00x |
+| SPC severity | 20% | 1 / 17 | 5.9% | 0.29x |
+
+Training-period weight selection chose ML=0 and SPC=1 for the optional blend,
+so the combined ranking reduced to SPC and did not improve final performance.
+This negative result is retained. SPC alerts are not supervised
+classifications: a classifier ranks labelled failure risk, while SPC asks
+whether measurements depart from a historical reference. An excursion can be
+real without a recorded failure, and a failure can occur without an SPC alert.
+
+## Candidate process-variable triage
+
+The consensus ranking combines chronological-training-only feature stability,
+permutation importance, standardized failure/pass association, missing-rate
+and KS drift, EWMA/CUSUM violation frequency, PCA Q/SPE contribution, and rank
+stability across training windows. The leading candidates are `sensor_021`,
+`sensor_247`, `sensor_059`, `sensor_519`, and `sensor_129`. These anonymous
+features establish investigation priority and association only; they do not
+identify a physical mechanism or establish causality.
+
+Generated evidence is stored in `mspc_run_scores.csv`,
+`spc_method_comparison.csv`, `monitoring_strategy_comparison.csv`,
+`candidate_process_variables.csv`, and `run_level_triage.csv` under
+`reports/tables/`, with corresponding timeline, capacity, ranking, effect-size,
+and control-chart figures under `reports/figures/`. The Streamlit dashboard
+reads these artifacts only and never retrains at startup.
+
 ## Interpretation limits
 
 The feature names are anonymised, so this project can rank influential process
@@ -169,6 +236,11 @@ workflow, not deployment readiness or causal root-cause identification. The
 chronological degradation also shows that a model validated by random splitting
 can overstate future-process performance when the observed process distribution
 changes over time.
+
+No Cp/Cpk is calculated because real LSL/USL values are unavailable. The data
+also lack lot, wafer, equipment, chamber, recipe, and maintenance identifiers,
+so the project cannot support wafer/lot/equipment analysis. It does not measure
+true early-warning lead time and is only an offline research workflow.
 
 ## Open-source review
 

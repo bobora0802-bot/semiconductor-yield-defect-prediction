@@ -1,4 +1,4 @@
-# Model Card: SECOM Failure-Risk Screening Baseline
+# Model Card: SECOM Failure-Risk Screening and Excursion Triage
 
 ## Intended use
 
@@ -88,3 +88,42 @@ use rolling retraining and calibration windows; validate drift alarms; test on
 an external fab period; and require process-engineering review of every proposed
 action.
 
+## Phase I/II monitoring extension
+
+The earliest 80% of timestamp-ordered runs remains the development partition;
+the latest 20% (314 runs, 17 failures) remains the final holdout. Within
+development data, known pass runs from the earliest 60% window form a
+label-assisted historical reference, not a validated in-control production
+period.
+
+Fifteen monitoring variables are selected from training data only. Median
+imputation, standardisation, PCA, and empirical 99th-percentile control limits
+are fitted only on 684 Phase I reference rows. PCA retains 9 components, with a
+T² limit of 79.473 and Q/SPE limit of 11.279. The latest holdout is never used
+to choose variables, PCA dimension, limits, thresholds, or combination weights.
+
+## Monitoring evidence
+
+I-MR, EWMA, and CUSUM each flagged 100% of the final holdout. Hotelling's T²
+flagged 83.1% of runs, captured 13 of 17 failures, and also flagged 248 passes.
+Q/SPE flagged one passing run and captured no failures. This indicates severe
+reference-to-later distribution shift and poor actionability, not successful
+failure prediction.
+
+At 10% and 20% review capacity, the existing ML ranking captured 3/17 and 6/17
+failures; SPC severity captured 0/17 and 1/17. A validation-selected blend chose
+zero ML weight and reduced to SPC, so it did not improve the final result.
+
+## Candidate-variable and run triage
+
+The consensus combines training-only temporal stability, permutation
+importance, standardised association, missingness and KS drift, control-chart
+violations, and Q/SPE contribution. `sensor_021`, `sensor_247`, and
+`sensor_059` are the top three candidate process variables. Run-level triage
+combines model risk, T², Q/SPE, EWMA/CUSUM state, and anonymous-variable
+contributions. Actual labels are included only for offline evaluation.
+
+These fields establish association, triage signal, and investigation priority
+only. No physical mechanism, causal conclusion, wafer/lot/equipment effect,
+true warning lead time, or operational readiness is claimed. Cp/Cpk is not
+calculated because specification limits are unavailable.
