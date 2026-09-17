@@ -1,125 +1,79 @@
-"""Read-only Streamlit dashboard for generated SECOM evidence artifacts."""
-
-from __future__ import annotations
-
+"""Read-only evidence browser for the current retrospective study."""
 import json
 from pathlib import Path
-
 import pandas as pd
 import streamlit as st
 
-
 ROOT = Path(__file__).resolve().parents[1]
-REPORTS = ROOT / "reports"
-TABLES = REPORTS / "tables"
-
-
-@st.cache_data
-def load_artifacts():
-    return {
-        "baseline": json.loads((REPORTS / "baseline_summary.json").read_text(encoding="utf-8")),
-        "enhanced": json.loads((REPORTS / "enhanced_summary.json").read_text(encoding="utf-8")),
-        "spc": json.loads((REPORTS / "spc_triage_summary.json").read_text(encoding="utf-8")),
-        "runs": pd.read_csv(TABLES / "mspc_run_scores.csv", parse_dates=["timestamp"]),
-        "triage": pd.read_csv(TABLES / "run_level_triage.csv", parse_dates=["timestamp"]),
-        "candidates": pd.read_csv(TABLES / "candidate_process_variables.csv"),
-        "strategies": pd.read_csv(TABLES / "monitoring_strategy_comparison.csv"),
-    }
-
-
-st.set_page_config(page_title="SECOM Excursion Monitoring & Triage", layout="wide")
-st.title("Semiconductor Yield Excursion Monitoring & Root-Cause Triage")
-st.caption("Offline research dashboard. Reads generated CSV/JSON only; it does not retrain models.")
-
-try:
-    data = load_artifacts()
-except FileNotFoundError as error:
-    st.error(f"Missing generated artifact: {error}. Run the analysis scripts first.")
+OUT = ROOT / "reports/study"
+st.set_page_config(page_title="SECOM | Risk, Drift & Review", layout="wide")
+st.title("Failure risk under process drift")
+st.caption("SECOM materials MSc portfolio study · retrospective public-data analysis · AI-assisted implementation")
+if not (OUT / "summary.json").exists():
+    st.error("Evidence is not generated yet. Run: python scripts/run_study.py")
     st.stop()
+summary = json.loads((OUT / "summary.json").read_text(encoding="utf-8"))
 
-overview, monitoring, run_triage, candidate_variables, limitations = st.tabs(
-    ["Overview", "Process Monitoring", "Run Triage", "Candidate Variables", "Limitations"]
-)
+def table(name):
+    return pd.read_csv(OUT / f"{name}.csv")
 
+overview, validation, monitoring, cases, simulation, evidence = st.tabs(
+    ["Research overview", "Time validation", "Why alarms fail", "Run cases", "Known-change simulation", "Evidence & limits"])
 with overview:
-    enhanced = data["enhanced"]
-    columns = st.columns(4)
-    columns[0].metric("Runs", "1,567")
-    columns[1].metric("Anonymous variables", "590")
-    columns[2].metric("Failures", "104 (6.64%)")
-    columns[3].metric("Final chronological holdout", data["spc"]["split"]["final_holdout_rows"])
-    comparison = pd.DataFrame(
-        [
-            {"evaluation": "Random holdout", **enhanced["random_stratified"]["metrics"]},
-            {"evaluation": "Chronological holdout", **enhanced["chronological"]["metrics"]},
-        ]
-    )
-    st.subheader("Existing failure-risk model")
-    st.dataframe(comparison[["evaluation", "roc_auc", "pr_auc", "precision", "recall"]], hide_index=True, width="stretch")
-    st.subheader("Review-capacity strategy comparison")
-    st.dataframe(data["strategies"], hide_index=True, width="stretch")
-    st.info("Random splitting materially overstates later-period performance. SPC alerts and supervised risk scores answer different operational questions.")
-
+    st.markdown("**Question:** Can a model learned from historical manufacturing measurements remain useful when the process changes?")
+    cols = st.columns(4)
+    cols[0].metric("Measurements / runs", f"{summary['data']['features']} / {summary['data']['rows']:,}")
+    cols[1].metric("Failures", summary["data"]["failures"])
+    cols[2].metric("Latest-period AP", f"{summary['latest_metrics']['average_precision']:.3f}")
+    cols[3].metric("Latest-period prevalence", f"{summary['latest_metrics']['failure_rate']:.1%}")
+    st.image(str(OUT / "figures/study_overview.png"))
+    st.info("All periods were previously inspected. These are historical backtests, not new external validation. The grey band is a random-review reference range, not a confidence interval for model performance.")
+    st.dataframe(table("illustrative_policy_cost"), hide_index=True)
+    st.caption("Illustrative cost: missed failure = 10, passing run reviewed = 1. No factory costs were measured.")
+with validation:
+    st.markdown("Each outer window selects a model and threshold using earlier expanding-window validation. Preprocessing is refitted inside each training period. Fixed ablations do not choose the policy.")
+    st.dataframe(table("splits"), hide_index=True)
+    st.dataframe(table("temporal_metrics"), hide_index=True)
+    st.subheader("Fixed-model random-split diagnostic")
+    st.dataframe(table("random_split_diagnostic"), hide_index=True)
+    st.caption("Random and time splits contain different examples; this comparison alone cannot prove the cause of a performance difference.")
+    st.subheader("Latest-period conditional uncertainty")
+    st.dataframe(table("conditional_day_bootstrap"), hide_index=True)
+    st.caption("Whole observed days resampled with replacement, model held fixed. Few days, possible dependence across days, and historical reuse limit inference.")
+    st.subheader("Review capacity")
+    cap = table("capacity")
+    st.dataframe(cap[cap.model.eq("selected_policy")], hide_index=True)
+    st.caption("Retrospective batch ranking. Random-null probabilities are descriptive and unadjusted for multiple comparisons. Scores are not calibrated probabilities.")
 with monitoring:
-    runs = data["runs"]
-    figure_columns = st.columns(2)
-    figure_columns[0].image(str(REPORTS / "figures" / "mspc_t2_timeline.png"), caption="Reference-fitted Hotelling T² timeline")
-    figure_columns[1].image(str(REPORTS / "figures" / "mspc_q_timeline.png"), caption="Reference-fitted Q/SPE timeline")
-    score_name = st.selectbox("Monitoring statistic", ["t2", "q_spe", "ewma_score", "cusum_score"])
-    chart = runs.set_index("timestamp")[[score_name]].copy()
-    chart["observed_failure_offline"] = runs.set_index("timestamp")["failure"] * chart[score_name].max()
-    st.line_chart(chart)
-    st.dataframe(
-        runs[["run_id", "timestamp", "phase", "failure", "t2", "q_spe", "ewma_alert", "cusum_alert", "mspc_alert"]].tail(100),
-        hide_index=True,
-        width="stretch",
-    )
-    st.caption("Failure markers are available only for offline evaluation; control limits were frozen from the Phase I reference.")
-
-with run_triage:
-    triage = data["triage"]
-    run_id = st.selectbox("Select run", triage["run_id"].tolist(), index=len(triage) - 1)
-    selected = triage.loc[triage["run_id"] == run_id].iloc[0]
-    metrics = st.columns(4)
-    metrics[0].metric("Model risk", f"{selected['model_risk']:.3f}")
-    metrics[1].metric("T²", f"{selected['t2']:.2f}")
-    metrics[2].metric("Q/SPE", f"{selected['q_spe']:.2f}")
-    metrics[3].metric("Review priority", selected["review_priority"])
-    st.write("Top contributing anonymous variables:", selected["top_contributing_anonymous_variables"])
-    st.json(
-        {
-            "timestamp": str(selected["timestamp"]),
-            "actual_label_offline_only": int(selected["actual_label_offline_only"]),
-            "ewma_alert": bool(selected["ewma_alert"]),
-            "cusum_alert": bool(selected["cusum_alert"]),
-            "mspc_alert": bool(selected["mspc_alert"]),
-        }
-    )
-
-with candidate_variables:
-    candidates = data["candidates"]
-    figure_columns = st.columns(2)
-    figure_columns[0].image(str(REPORTS / "figures" / "top_sensor_control_charts.png"), caption="Top candidate control-chart signals")
-    figure_columns[1].image(str(REPORTS / "figures" / "failure_vs_pass_effect_sizes.png"), caption="Training-only signed effects")
-    show = st.slider("Number of candidate process variables", 10, 50, 20)
-    st.bar_chart(candidates.head(show).set_index("feature")["consensus_score"])
-    st.dataframe(
-        candidates.head(show)[
-            ["consensus_rank", "feature", "selection_frequency", "top20_frequency", "permutation_importance", "effect_size", "effect_direction", "missing_rate_change", "ks_statistic", "spc_alert_rate", "rank_stability", "interpretation"]
-        ],
-        hide_index=True,
-        width="stretch",
-    )
-
-with limitations:
-    st.markdown(
-        """
-- Variables are anonymous, so no pressure, temperature, flow, recipe, or physical mechanism can be identified.
-- Lot, wafer, equipment, chamber, recipe, maintenance, and specification-limit identifiers are unavailable.
-- Cp/Cpk is intentionally not calculated because real LSL/USL values are unavailable.
-- The Phase I pass-only baseline is label-assisted historical reference data, not a validated in-control production period.
-- Signals demonstrate association and investigation priority only; they do not establish causality.
-- This is an offline research workflow, not an operational monitoring system.
-- No claim of physical lead time or genuine early warning is supported by this dataset.
-        """
-    )
+    st.image(str(OUT / "figures/alarm_diagnosis.png"))
+    st.markdown("The two plotted sensors were chosen after the v2 audit. They are diagnostic examples, not prospectively discovered physical causes. I-chart lines use fitted limits; I-MR also tests moving ranges.")
+    st.dataframe(table("sensor_diagnostics"), hide_index=True)
+    st.subheader("One variable versus a union of alarms")
+    st.dataframe(table("alarm_union_diagnostics"), hide_index=True)
+    st.subheader("Reference sensitivity — no winner promoted")
+    st.dataframe(table("reference_sensitivity"), hide_index=True)
+    st.caption("Sensitivity runs reset monitoring at the evaluation boundary. Main runs carry post-reference state. Label-assisted pass references are not verified in-control production.")
+with cases:
+    chosen = table("case_studies")
+    st.caption("Earliest timestamp in each available outcome category under fixed 20% batch review. A category with no examples is not fabricated.")
+    case_id = st.selectbox("Illustrative case", chosen.run_id.tolist(), format_func=lambda rid: f"Run {rid} — {chosen.loc[chosen.run_id.eq(rid), 'case_type'].iloc[0]}")
+    row = chosen.loc[chosen.run_id.eq(case_id)].iloc[0]
+    st.dataframe(row.astype(str).to_frame("Observed value"))
+    st.warning("Q residual top-three variables explain PCA reconstruction error only. They do not explain classifier risk, T², CUSUM or a physical failure mechanism.")
+    st.markdown("**What an engineer would need next:** sensor identity and units, recipe/tool/lot context, maintenance history, measurement quality, and an independent physical investigation. None are supplied by SECOM.")
+    st.download_button("Download latest-period run evidence", (OUT / "final_run_review.csv").read_bytes(), "final_run_review.csv", "text/csv")
+with simulation:
+    st.image(str(OUT / "figures/simulation.png"))
+    st.dataframe(table("simulation_summary"), hide_index=True)
+    st.caption(summary["simulation"])
+    st.info("Pre-change false alarms are reported separately; state is not reset after alarms. Detection delay does not establish real manufacturing warning lead time.")
+with evidence:
+    st.markdown("""
+- Public anonymous data; no measured yield improvement, causal diagnosis or production deployment.
+- No wafer/lot/tool IDs, sensor units or specification limits; no Cp/Cpk claim.
+- Model risk and process excursion scores answer different questions.
+- Implementation and documentation were developed with AI assistance; independent author mastery has not been assessed.
+- Historical v2 outputs remain in reports/legacy_v2; they are not current validated results.
+""")
+    st.json({"study_protocol": summary["scope"], "decisions": summary["decisions"]})
+    st.download_button("Download provenance manifest", (OUT / "manifest.json").read_bytes(), "manifest.json", "application/json")

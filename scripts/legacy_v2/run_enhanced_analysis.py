@@ -1,6 +1,9 @@
 """Run robustness, calibration, capacity, drift, and stability analyses."""
 
 from __future__ import annotations
+if __name__ == "__main__":
+    raise SystemExit("Archived v2 entry point. Use scripts/reproduce.py for the current study; use commit b0362e6 in an isolated checkout for historical reproduction.")
+
 
 import json
 import sys

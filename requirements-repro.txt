@@ -1,0 +1,18 @@
+# Main dependencies pinned from the tested Python 3.12 environment.
+# Full observed environment: environment-snapshot.txt (diagnostic, not a portable lock).
+-r requirements.txt
+numpy==2.5.2
+pandas==2.3.3
+scikit-learn==1.9.0
+scipy==1.18.1
+matplotlib==3.11.1
+seaborn==0.13.2
+streamlit==1.63.0
+jupyterlab==4.6.3
+nbformat==5.11.1
+nbclient==0.11.0
+ipykernel==7.3.0
+pytest==8.4.2
+joblib==1.6.0
+threadpoolctl==3.6.0
+pillow==12.3.0

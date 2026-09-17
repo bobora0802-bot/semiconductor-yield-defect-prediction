@@ -1,0 +1,19 @@
+{
+  "seed": 42,
+  "outer_train_fractions": [0.50, 0.60, 0.70, 0.80],
+  "outer_end_fractions": [0.60, 0.70, 0.80, 1.00],
+  "inner_train_fractions": [0.50, 0.65, 0.80],
+  "inner_end_fractions": [0.65, 0.80, 1.00],
+  "candidates": ["logistic_selected", "random_forest"],
+  "ablations": ["rf_without_selection", "rf_missing_indicator"],
+  "review_capacities": [0.05, 0.10, 0.20, 0.30],
+  "false_negative_cost": 10,
+  "false_positive_cost": 1,
+  "monitoring_features": 15,
+  "reference_fraction": 0.60,
+  "simulation_repeats": 200,
+  "simulation_reference_rows": 200,
+  "simulation_prechange_rows": 100,
+  "simulation_postchange_rows": 100,
+  "interpretation": "Retrospective exploratory study on previously inspected data. Not a fresh external test. No performance target or claim of industrial validation."
+}

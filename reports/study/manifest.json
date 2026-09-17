@@ -1,0 +1,133 @@
+{
+  "generated_utc": "2026-09-17T12:01:24.609026+00:00",
+  "python": "3.12.14",
+  "hash_policy": "Text suffixes .py/.md/.json/.csv/.txt/.yml/.ipynb: UTF-8 without BOM, CRLF normalized to LF. Raw data and binary figures: exact bytes.",
+  "git_head": "b0362e640c1a08b39752f0f36077db3cdde5079a",
+  "git_status": " M .github/workflows/ci.yml\n M README.md\n M app/streamlit_app.py\nR  notebooks/01_secom_yield_and_defect_prediction.ipynb -> notebooks/legacy_v2/01_secom_yield_and_defect_prediction.ipynb\nR  reports/baseline_summary.json -> reports/legacy_v2/baseline_summary.json\nR  reports/enhanced_summary.json -> reports/legacy_v2/enhanced_summary.json\nR  reports/figures/calibration_comparison.png -> reports/legacy_v2/figures/calibration_comparison.png\nR  reports/figures/candidate_variable_ranking.png -> reports/legacy_v2/figures/candidate_variable_ranking.png\nR  reports/figures/failure_vs_pass_effect_sizes.png -> reports/legacy_v2/figures/failure_vs_pass_effect_sizes.png\nR  reports/figures/feature_stability.png -> reports/legacy_v2/figures/feature_stability.png\nR  reports/figures/heldout_confusion_matrix.png -> reports/legacy_v2/figures/heldout_confusion_matrix.png\nR  reports/figures/heldout_roc_pr_curves.png -> reports/legacy_v2/figures/heldout_roc_pr_curves.png\nR  reports/figures/monitoring_strategy_capacity_curve.png -> reports/legacy_v2/figures/monitoring_strategy_capacity_curve.png\nR  reports/figures/mspc_q_timeline.png -> reports/legacy_v2/figures/mspc_q_timeline.png\nR  reports/figures/mspc_t2_timeline.png -> reports/legacy_v2/figures/mspc_t2_timeline.png\nR  reports/figures/random_vs_chronological_metrics.png -> reports/legacy_v2/figures/random_vs_chronological_metrics.png\nR  reports/figures/review_capacity_curve.png -> reports/legacy_v2/figures/review_capacity_curve.png\nR  reports/figures/spc_alert_comparison.png -> reports/legacy_v2/figures/spc_alert_comparison.png\nR  reports/figures/top_permutation_importance.png -> reports/legacy_v2/figures/top_permutation_importance.png\nR  reports/figures/top_sensor_control_charts.png -> reports/legacy_v2/figures/top_sensor_control_charts.png\nR  reports/figures/weekly_failure_rate.png -> reports/legacy_v2/figures/weekly_failure_rate.png\nR  reports/model_card.md -> reports/legacy_v2/model_card.md\nR  reports/spc_triage_summary.json -> reports/legacy_v2/spc_triage_summary.json\nR  reports/tables/bootstrap_confidence_intervals.csv -> reports/legacy_v2/tables/bootstrap_confidence_intervals.csv\nR  reports/tables/calibration_comparison.csv -> reports/legacy_v2/tables/calibration_comparison.csv\nR  reports/tables/candidate_process_variables.csv -> reports/legacy_v2/tables/candidate_process_variables.csv\nR  reports/tables/cost_ratio_sensitivity.csv -> reports/legacy_v2/tables/cost_ratio_sensitivity.csv\nR  reports/tables/dataset_profile.csv -> reports/legacy_v2/tables/dataset_profile.csv\nR  reports/tables/feature_stability.csv -> reports/legacy_v2/tables/feature_stability.csv\nR  reports/tables/model_cv_comparison.csv -> reports/legacy_v2/tables/model_cv_comparison.csv\nR  reports/tables/monitoring_strategy_comparison.csv -> reports/legacy_v2/tables/monitoring_strategy_comparison.csv\nR  reports/tables/mspc_q_contributions.csv -> reports/legacy_v2/tables/mspc_q_contributions.csv\nR  reports/tables/mspc_run_scores.csv -> reports/legacy_v2/tables/mspc_run_scores.csv\nR  reports/tables/random_vs_chronological_metrics.csv -> reports/legacy_v2/tables/random_vs_chronological_metrics.csv\nR  reports/tables/review_capacity_analysis.csv -> reports/legacy_v2/tables/review_capacity_analysis.csv\nR  reports/tables/run_level_triage.csv -> reports/legacy_v2/tables/run_level_triage.csv\nR  reports/tables/spc_method_comparison.csv -> reports/legacy_v2/tables/spc_method_comparison.csv\nR  reports/tables/temporal_feature_drift_top100.csv -> reports/legacy_v2/tables/temporal_feature_drift_top100.csv\nR  reports/tables/threshold_analysis.csv -> reports/legacy_v2/tables/threshold_analysis.csv\nR  reports/tables/top_permutation_importance.csv -> reports/legacy_v2/tables/top_permutation_importance.csv\nR  reports/tables/weekly_failure_rate.csv -> reports/legacy_v2/tables/weekly_failure_rate.csv\n M requirements.txt\n M scripts/download_data.py\nRM scripts/build_notebook.py -> scripts/legacy_v2/build_notebook.py\nRM scripts/run_baseline.py -> scripts/legacy_v2/run_baseline.py\nRM scripts/run_enhanced_analysis.py -> scripts/legacy_v2/run_enhanced_analysis.py\nRM scripts/run_root_cause_triage.py -> scripts/legacy_v2/run_root_cause_triage.py\nRM scripts/run_spc_analysis.py -> scripts/legacy_v2/run_spc_analysis.py\n M src/secom_project/__init__.py\n M src/secom_project/data.py\n M src/secom_project/evaluation.py\n M src/secom_project/spc.py\n M src/secom_project/triage.py\n M tests/test_data_and_pipeline.py\n M tests/test_enhanced_evaluation.py\n M tests/test_spc.py\n M tests/test_triage.py\n?? .gitattributes\n?? configs/\n?? docs/\n?? environment-snapshot.txt\n?? notebooks/01_data_and_question.ipynb\n?? notebooks/02_time_validation_and_review.ipynb\n?? notebooks/03_alarm_diagnosis_and_simulation.ipynb\n?? reports/legacy_v2/README.md\n?? reports/study/\n?? requirements-repro.txt\n?? scripts/build_study_notebooks.py\n?? scripts/reproduce.py\n?? scripts/run_study.py\n?? scripts/verify_artifacts.py\n?? src/secom_project/monitoring_study.py\n?? src/secom_project/simulation.py\n?? src/secom_project/study.py\n?? tests/test_study.py\n?? tests/test_study_artifacts.py\n",
+  "config": {
+    "seed": 42,
+    "outer_train_fractions": [
+      0.5,
+      0.6,
+      0.7,
+      0.8
+    ],
+    "outer_end_fractions": [
+      0.6,
+      0.7,
+      0.8,
+      1.0
+    ],
+    "inner_train_fractions": [
+      0.5,
+      0.65,
+      0.8
+    ],
+    "inner_end_fractions": [
+      0.65,
+      0.8,
+      1.0
+    ],
+    "candidates": [
+      "logistic_selected",
+      "random_forest"
+    ],
+    "ablations": [
+      "rf_without_selection",
+      "rf_missing_indicator"
+    ],
+    "review_capacities": [
+      0.05,
+      0.1,
+      0.2,
+      0.3
+    ],
+    "false_negative_cost": 10,
+    "false_positive_cost": 1,
+    "monitoring_features": 15,
+    "reference_fraction": 0.6,
+    "simulation_repeats": 200,
+    "simulation_reference_rows": 200,
+    "simulation_prechange_rows": 100,
+    "simulation_postchange_rows": 100,
+    "interpretation": "Retrospective exploratory study on previously inspected data. Not a fresh external test. No performance target or claim of industrial validation."
+  },
+  "config_sha256": "1e4fb228a1c1c48c35ea65bb993fc376cd6a085831afe6e6aab442a19162f9ff",
+  "data_sha256": {
+    "secom.data": "20f0e7ee434f7dcbae0eea9ffff009a2b57f42d6b0dc9a5bd4f00782c0a3374c",
+    "secom.names": "6d91b0b46cdee03064ee3e3112f937c1b3f7fcd9933575794ec07974e6f1ea59",
+    "secom.zip": "eea568baf3c2229096d7d294cf0b096b5502bd96d92c0b80a65b84714059be8e",
+    "secom_labels.data": "126884cf453705c9e61a903fe906f0665a3b45ce3639e621edc5c93c89627e03"
+  },
+  "source_sha256": {
+    "app/streamlit_app.py": "b50babff890b28b34ecb1ee2fcd8c95826df77b56c5821d9fd0dee049338f99d",
+    "configs/study.json": "1e4fb228a1c1c48c35ea65bb993fc376cd6a085831afe6e6aab442a19162f9ff",
+    "scripts/build_study_notebooks.py": "2131cb92a98375f6c9d69b7cc1bd7e720c623b5d5e25fba2b49aac47463ffc21",
+    "scripts/download_data.py": "20945fdd0aa1f1b9ae3d416ffaa0181bf4b97344dc31b2c22328663eeafd38e4",
+    "scripts/legacy_v2/build_notebook.py": "6881fbc99d59b6c3bb322ee3e2c9d0a02112bfb173ec3ac2f555d993a720c611",
+    "scripts/legacy_v2/run_baseline.py": "db441dbdf9fad1c6f998aa97d73619e077d4727a35810da9988a165a53e1d5af",
+    "scripts/legacy_v2/run_enhanced_analysis.py": "1457eee7b7311de69a509f87e2333ae1a4fc01b8c982f718bb275c2f3b7f84cd",
+    "scripts/legacy_v2/run_root_cause_triage.py": "5d27c147882cb66fb5308eb3015ba6da072ec2795395ce628489bbf02c4adeb9",
+    "scripts/legacy_v2/run_spc_analysis.py": "d14db210cff6f4dcd30adcfd7c48adae81d3b7a5d95d2e518d72453543898a3e",
+    "scripts/reproduce.py": "6419bf36ef1c1a7079d3dc111cdc522a5722c1e832a8d90d47ae28b26a699289",
+    "scripts/run_study.py": "fc92ac28b158838dedce103fdb7a3bbbedc9e9ec328073f95eaf42e40f36b256",
+    "scripts/verify_artifacts.py": "43e483b54e79b6837b1f4ab49792294c8bbc02ee875ab954cbcd195c2a38fa02",
+    "src/secom_project/__init__.py": "abc27ae4f31ecdcedf0c579754215b3b54ae2a352452f97d2794de2f93ce90df",
+    "src/secom_project/data.py": "b99260863d147488314e505d06da2c6bf7546d1987396f504d55b6fe028129dd",
+    "src/secom_project/evaluation.py": "5ac31fa5e5b647cc7f76a657690bb564d61622e3747dbdb69192c4574bfa6d77",
+    "src/secom_project/modeling.py": "42256bc5956c8764ca66ae512cfb5aaa0c3b472d25cacc821c0e1af38d9b1fa7",
+    "src/secom_project/monitoring_study.py": "4cb2f80d600ee121c3ec79e82be0dac7a45da8129e52ba9944e634ed5feeecf7",
+    "src/secom_project/simulation.py": "1fd1a92fbaf60898f18cf0cd2816d8657d0f113ac81d562f15bf6372d1ca2a88",
+    "src/secom_project/spc.py": "3bd615ae89f9d6db53ba9828c8b7c005f1064013063d3abed18f834ba540199e",
+    "src/secom_project/study.py": "4e9be6a39e533fb4c394e860a290139b84f01d3fdb8e0c032983d2f6393dc3a6",
+    "src/secom_project/triage.py": "51596527a2cb79fc5cbe527855de6a1c4f31818e7681abded7e9627c1afae0de",
+    "tests/test_data_and_pipeline.py": "d73d3487c9fba1bb5bc04897c6956d647c5a76f7917d376eacb5c8149fe534ea",
+    "tests/test_enhanced_evaluation.py": "145478889d01520f27a93f542e8a8c06ee363721c3d5e39ea557b9f2b15a624e",
+    "tests/test_spc.py": "f0ddf61edfcbdf44d89433b85369654313d433fa4b329c2b7f47e12821764a9e",
+    "tests/test_study.py": "d30686ffe1959ee9b795cbac2e06394909985c7f4320bbc9b8315d22686f9908",
+    "tests/test_study_artifacts.py": "c14e6dad5eb73fdf12cadb355b05ecd2f3a58152865083ad635da8dfe71bdd41",
+    "tests/test_triage.py": "c3cfe47aa64f5c09d5c5673111c27108531b6f9dde3d2061484fcb7de288f2d5"
+  },
+  "package_versions": {
+    "numpy": "2.5.2",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.1",
+    "seaborn": "0.13.2",
+    "streamlit": "1.63.0",
+    "nbformat": "5.11.1",
+    "nbclient": "0.11.0",
+    "pytest": "8.4.2"
+  },
+  "artifact_sha256": {
+    "alarm_union_diagnostics.csv": "c366c239543998d9da4be166f050777ab583f7e3483f375f9f651a92cc96eb73",
+    "capacity.csv": "a39175d87b9aee57d1404f4a401b1cfee97ad94504de987fdc6e42ec9846a9bd",
+    "case_studies.csv": "a88b86b54397c0887f397518d9047fc260317d939a5c6377f316b17d45d9010f",
+    "conditional_day_bootstrap.csv": "f80e1816a1307017ba26f2f89d1847f559e7ed96ddfe06999168d63caec4d64a",
+    "control_limits.csv": "463dbbbba9cd9803398a0ea2e88ac9aec7a1ff127928c24001ad761f530f7b0a",
+    "data_quality.csv": "90f7a1b8bdaa5f82212b12ee314f4054495bd68042c0ea4f5d7b45d69656189c",
+    "earlier_validation_importance.csv": "c577973bdb395be99718a6df5b2487475e9254031f8066a3edfd8e6a70a7e598",
+    "figures/alarm_diagnosis.png": "daf5fdb39d2100156dc7b54b16e9b35b2a7e05173c39144758495591c9735434",
+    "figures/simulation.png": "cf443ffe0ee4bda4b77261511d24a343064789b99c0313bd49b875d37b784819",
+    "figures/study_overview.png": "e9fbe4740d07a2d95d352545603c4622669ce6f9a0c40c77f2240a54fa3e8503",
+    "final_run_review.csv": "7974da78e2adf5b15970c40ab27af8b3fcd984d62310456db3035eb7733bacab",
+    "illustrative_policy_cost.csv": "f395b260e5e5225c6d21afaaabf9dca6be5629bc3f743b894df79e16603a482d",
+    "inner_validation.csv": "0b26e3b63494c54e66780824ac0b1fd08db6fda0562de04278fa01bb03009126",
+    "monitor_methods.csv": "f019252857963aab0bc13224ffd3d56b6931b2cfe2e11afba6b3feda46e4bed4",
+    "monitor_scores.csv": "5fe2b71213eca358097db367bcf8e4290ad7d9f62d3434de6dceea692ba351db",
+    "predictions.csv": "81f7b622211bff1c5abc98670d77369f9e920091f4f135fc05249b9b01330c4a",
+    "q_contributions.csv": "16562c3512da51d01edaec80f633b358a58b85e132da646835b8b916cd4e1069",
+    "random_split_diagnostic.csv": "35115b3c24763369eef1971f8068588c5ae582afee6492ba8d8c12baa7bcbac6",
+    "reference_sensitivity.csv": "1fabdfd74396d55ef1a0b0ca956c997082ed31e6d58b17e510f48a6b969a3076",
+    "RESULTS.md": "6461a75e18361771653f9f207db67a08d10a424e1f21962ff9892650651b7e3c",
+    "sensor_diagnostics.csv": "7558e86f2c1ecf086d8737dd67b1f262e0a06752452ba6b13e2e21b5705b5347",
+    "simulation_examples.csv": "298ce5654b8b849fdeb5337f78b16c2f951e3e9bf7e9bb75dd05367f3e8e276b",
+    "simulation_summary.csv": "c2106e1f434604a850e28e54193047c87a16d342b51a126d5cc46469837b7f9a",
+    "simulation_trials.csv": "b73ec993e9db6e0765f8cf4fb10c6d78e4e98136c9e1f49c0779339a816f9334",
+    "splits.csv": "53ae60f306174e49040788f0971db17203e7bc87338df7904bed0d206821198c",
+    "summary.json": "6b107afeae66d7774508da436552c6529211d57e33a2b40cca93c5ae6b78605c",
+    "temporal_metrics.csv": "ba0e0a67b14a8ee750d112b1ede2ba118b521539cd448a7b0287a46fdcd7a521",
+    "weekly_failure_rate.csv": "e2d11a34dd6f0babe73bf84b2c2e17665483d880b82c0b2bcd46420f97fb12e8"
+  }
+}

@@ -25,4 +25,3 @@ def test_every_pipeline_fits_and_scores_probabilities():
         assert probability.shape == (12,)
         assert np.isfinite(probability).all()
         assert ((probability >= 0) & (probability <= 1)).all()
-

@@ -229,4 +229,3 @@ def cost_sensitive_threshold(
         ascending=[True, True, True, False],
     ).iloc[0]
     return float(best["threshold"]), table
-

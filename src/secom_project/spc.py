@@ -154,7 +154,7 @@ class UnivariateSPC:
             frame[f"{method}_alert"] = frame[columns].any(axis=1)
         ewma_columns = [f"{feature}__ewma" for feature in self.features_]
         cusum_columns = [f"{feature}__cusum" for feature in self.features_]
-        frame["ewma_score"] = frame[ewma_columns].abs().max(axis=1) / max(float(ewma_limit[-1]), 1e-12)
+        frame["ewma_score"] = frame[ewma_columns].abs().max(axis=1) / np.maximum(ewma_limit, 1e-12)
         frame["cusum_score"] = frame[cusum_columns].max(axis=1) / self.cusum_h
         return frame
 

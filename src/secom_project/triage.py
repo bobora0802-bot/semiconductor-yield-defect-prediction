@@ -53,6 +53,12 @@ def make_run_level_triage(run_scores: pd.DataFrame, contributions: pd.DataFrame,
 
     if len(run_scores) != len(contributions):
         raise ValueError("Run scores and contributions must have the same row count.")
+    for table in (run_scores, contributions):
+        if table["run_id"].isna().any() or not table["run_id"].is_unique:
+            raise ValueError("run_id must be non-null and unique.")
+    if set(run_scores["run_id"]) != set(contributions["run_id"]):
+        raise ValueError("Run IDs must match exactly.")
+    contributions = contributions.set_index("run_id").loc[run_scores["run_id"]].reset_index()
     feature_columns = [column for column in contributions.columns if column != "run_id"]
     values = contributions[feature_columns].to_numpy(dtype=float)
     top_positions = np.argsort(-values, axis=1, kind="stable")[:, :top_n]

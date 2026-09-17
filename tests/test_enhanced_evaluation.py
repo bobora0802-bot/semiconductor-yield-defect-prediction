@@ -44,4 +44,3 @@ def test_bootstrap_intervals_are_bounded_and_include_estimates():
     )
     assert (table["lower"] <= table["upper"]).all()
     assert set(table["metric"]) >= {"roc_auc", "pr_auc", "precision", "recall"}
-
