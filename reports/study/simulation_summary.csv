@@ -1,0 +1,10 @@
+scenario,method,trials,prechange_alert_fraction,prechange_probability_any_alert,postchange_alert_fraction,detection_probability,median_delay_among_detected,mean_restricted_delay
+stable,imr,200,0.0127,0.645,0.013000000000000001,,,
+stable,ewma,200,0.00315,0.175,0.00415,,,
+stable,cusum,200,0.0086,0.22,0.01195,,,
+step_1sigma,imr,200,0.0127,0.645,0.0333,0.88,24.0,38.295
+step_1sigma,ewma,200,0.00315,0.175,0.46275,1.0,8.0,11.24
+step_1sigma,cusum,200,0.0086,0.22,0.8944,1.0,8.0,10.095
+ramp_to_2sigma,imr,200,0.0127,0.645,0.05295,0.98,48.0,48.745
+ramp_to_2sigma,ewma,200,0.00315,0.175,0.46365,1.0,39.0,38.5
+ramp_to_2sigma,cusum,200,0.0086,0.22,0.59325,1.0,39.0,36.965

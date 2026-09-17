@@ -50,4 +50,3 @@ def load_secom(raw_dir: str | Path) -> tuple[pd.DataFrame, pd.Series, pd.Series]
         labels["timestamp"], format="%d/%m/%Y %H:%M:%S", errors="raise"
     ).rename("timestamp")
     return features, target, timestamps
-
